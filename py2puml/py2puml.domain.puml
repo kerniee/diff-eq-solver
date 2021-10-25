@@ -1,0 +1,73 @@
+@startuml
+class equations.methods.ButcherSchema {
++  h_coefs: numpy.ndarray
++  yk_coefs: numpy.ndarray
++  k_coefs: numpy.ndarray
++  label: str
+}
+class equations.methods.ButcherSchemaMethod {
++  bs: ButcherSchema
++  f_lambda: Callable
++  last_seen_eq: Expr
+}
+class equations.methods.ExactSolutionMethod {
++  label: str
++  solved_func: Expr
+}
+class equations.methods.Method {
++  eq: Expr
++  symbols: Symbols
++  label: str
+}
+class equations.utils.Symbols {
++  x: sympy.core.symbol.Symbol
++  y: Function
++  y_without_params: Function
++  c: sympy.core.symbol.Symbol
+}
+class gui.NumberInputField {
++  var: type
++  label: Label
++  entry: Entry
+}
+class gui.View {
++  right_panel: None
++  eq_frame: Frame
++  eq_field: Text
++  btn_change_eq: Button
++  fields: LabelFrame
++  y0_field: NumberInputField
++  x0_field: NumberInputField
++  X_field: NumberInputField
++  N_field: NumberInputField
++  error_fields: LabelFrame
++  n0_field: NumberInputField
++  N_err_field: NumberInputField
++  comp_method_btns: Frame
++  main_fig: Figure
++  main_axs: List[Axes]
++  main_ax: Axes
++  main_err_ax: Axes
++  error_fig: Figure
++  all_error_ax: Axes
++  canvas: FigureCanvasTkAgg
++  menubar: Menu
+}
+class main.Controller {
++  recalc_func: Callable
++  view: View
++  model: Model
++  exact: Method
++  methods_to_draw: List[Method]
+}
+class model.Model {
++  s: str
++  symbols: Symbols
++  eq: Expr
++  methods: List[Method]
+}
+equations.methods.ButcherSchemaMethod *-- equations.methods.ButcherSchema
+equations.methods.Method <|-- equations.methods.ButcherSchemaMethod
+equations.methods.Method <|-- equations.methods.ExactSolutionMethod
+gui.View *-- gui.NumberInputField
+@enduml

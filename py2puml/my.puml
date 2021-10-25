@@ -1,0 +1,80 @@
+@startuml
+'set namespaceSeparator none
+'skinparam linetype ortho
+'together {
+'    class gui.NumberInputField
+'    class gui.View
+'}
+!include ./py2puml.domain.puml
+abstract class equations.methods.Method
+class equations.utils.Symbols << dataclass >>
+class equations.methods.ButcherSchema << dataclass >>
+
+together {
+    package tk {
+        class Entry
+        class Label
+        class Variable
+        class Frame
+        class Tk
+        class Text
+    }
+
+    package matplotlib {
+        class Axes
+        class Figure
+    }
+}
+
+model.Model : + generate_eq(str): Expr
+model.Model : + change_eq(str): None
+model.Model : + add_method(Method.__class__): Method
+model.Model : + calc_error(float [0..*], float [0..*]): float [0..*]
+
+main.Controller : + __init__(str)
+main.Controller : + change_to_main_plot(bool)
+main.Controller : + change_to_error_plot(bool)
+main.Controller : + change_method_to_draw(Method [0..*])
+main.Controller : + run()
+main.Controller : + change_eq()
+main.Controller : + recalc_error()
+main.Controller : + recalc_main()
+main.Controller : + draw_eps(float [0..*], float [0..*], float [0..*], str, int)
+
+gui.NumberInputField : + bind_on_change(Callable)
+gui.NumberInputField : + pack(*args, **kwargs): self
+gui.NumberInputField : + value(): float
+
+gui.View : + __init__(str)
+gui.View : + loading_screen()
+gui.View : + clear_plot()
+gui.View : + add_comp_method_btn(str, Callable)
+
+equations.methods.Method : + __init__(str)
+equations.methods.Method : + set_eq(Expr)
+equations.methods.Method : + {abstract} calculate_points(float, float, float, int): list[float[0..*], float[0..*]]
+equations.methods.Method : + {static} get_xs(float, float, int): float[0..*]
+
+equations.methods.ExactSolutionMethod : + __init__(str)
+equations.methods.ExactSolutionMethod : + set_eq(Expr)
+equations.methods.ExactSolutionMethod : + solve_ivp(float, float): Callable
+equations.methods.ExactSolutionMethod : + calc_solved_func(): Expr
+equations.methods.ExactSolutionMethod : + calculate_points(float, float, float, int): list[float[0..*], float[0..*]]
+
+equations.methods.ButcherSchemaMethod : - label
+equations.methods.ButcherSchemaMethod : + __init__(str, ButcherSchema)
+equations.methods.ButcherSchemaMethod : + gen_f_lambda(): Callable
+equations.methods.ButcherSchemaMethod : + label(): str
+equations.methods.ButcherSchemaMethod : + calculate_y(float, float, float): float
+equations.methods.ButcherSchemaMethod : + calculate_points(float, float, float, int): list[float[0..*], float[0..*]]
+
+
+matplotlib -down[hidden]-> tk
+tk <-- gui
+matplotlib <-- gui
+main.Controller *-- gui.View
+main.Controller *-- model.Model
+equations.methods.Method --o model.Model
+equations.utils.Symbols <-- model.Model
+equations.methods -right-> equations.utils
+@enduml
