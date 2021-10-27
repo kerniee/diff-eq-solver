@@ -45,16 +45,18 @@ class View(tk.Tk):
         self.btn_change_eq.pack()
         self.eq_frame.pack(side="top", pady=10)
 
-        self.fields: tk.LabelFrame = tk.LabelFrame(text="Parameters for equation", padx=10, pady=10, master=self.right_panel)
+        self.fields: tk.LabelFrame = tk.LabelFrame(text="Parameters for equation", padx=10, pady=10,
+                                                   master=self.right_panel)
         self.y0_field: NumberInputField = NumberInputField("y0", tk.DoubleVar, 1, master=self.fields).pack()
         self.x0_field: NumberInputField = NumberInputField("x0", tk.DoubleVar, 0, master=self.fields).pack()
         self.X_field: NumberInputField = NumberInputField("X", tk.DoubleVar, 7, master=self.fields).pack()
-        self.N_field: NumberInputField = NumberInputField("N", tk.IntVar, 400, master=self.fields).pack()
+        self.N_field: NumberInputField = NumberInputField("N", tk.IntVar, 20, master=self.fields).pack()
         self.fields.pack(pady=10)
 
-        self.error_fields: tk.LabelFrame = tk.LabelFrame(text="Parameters for error", padx=10, pady=10, master=self.right_panel)
-        self.n0_field: NumberInputField = NumberInputField("n0", tk.IntVar, 10, master=self.error_fields).pack()
-        self.N_err_field: NumberInputField = NumberInputField("N", tk.IntVar, 20, master=self.error_fields).pack()
+        self.error_fields: tk.LabelFrame = tk.LabelFrame(text="Parameters for error", padx=10, pady=10,
+                                                         master=self.right_panel)
+        self.n0_field: NumberInputField = NumberInputField("n0", tk.IntVar, 20, master=self.error_fields).pack()
+        self.N_err_field: NumberInputField = NumberInputField("N", tk.IntVar, 30, master=self.error_fields).pack()
         self.error_fields.pack(pady=10)
 
         self.comp_method_btns: tk.Frame = tk.Frame(self.right_panel)

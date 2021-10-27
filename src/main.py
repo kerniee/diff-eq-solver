@@ -93,15 +93,13 @@ class Controller:
              self.view.n0_field.value(),
              self.view.N_err_field.value(),)
         self.view.clear_plot()
-        exact_ys = []
         for i, method in enumerate(self.methods_to_draw):
             ys = []
             for curr_n in range(n0, N + 1):
                 x, y = method.calculate_points(x0, y0, X, curr_n)
                 if method == self.exact:
-                    exact_ys.append(y)
                     continue
-                ys.append(max(self.model.calc_error(exact_ys[curr_n - n0], y)))
+                ys.append(max(self.model.calc_error(x, y)))
             if method == self.exact:
                 continue
             self.view.all_error_ax.plot(list(range(n0, N + 1)), ys, label=method.label)
@@ -115,21 +113,19 @@ class Controller:
              self.view.X_field.value(),
              self.view.N_field.value(),)
         self.view.clear_plot()
-        exact_ys = []
         if len(self.methods_to_draw) > 0:
             for i, method in enumerate(self.methods_to_draw):
                 x, y = method.calculate_points(x0, y0, X, N)
                 self.view.main_ax.plot(x, y, label=method.label)
                 if method == self.exact:
-                    exact_ys = y
                     continue
-                self.draw_eps(x, exact_ys, y, method.label, i)
+                self.draw_eps(x, y, method.label, i)
         self.view.main_ax.legend()
         self.view.canvas.draw()
 
-    def draw_eps(self, x, exact_ys, y, label, i):
+    def draw_eps(self, x, y, label, i):
         clrs = list(colors.TABLEAU_COLORS.values())
-        self.view.main_err_ax.plot(x, self.model.calc_error(exact_ys, y), label=label, color=clrs[i])
+        self.view.main_err_ax.plot(x, self.model.calc_error(x, y), label=label, color=clrs[i])
         self.view.main_err_ax.legend()
 
 

@@ -28,5 +28,9 @@ class Model:
         self.methods.append(m)
         return m
 
-    def calc_error(self, right_y, y):
-        return [abs(y_exact - y) for y_exact, y in zip(right_y, y)]
+    # def calc_error(self, right_y, y):
+    #     return [abs(y_exact - y) for y_exact, y in zip(right_y, y)]
+
+    @staticmethod
+    def calc_error(xs, ys):
+        return [abs(Method.solved_f(x) - y) for x, y in zip(xs, ys)]
