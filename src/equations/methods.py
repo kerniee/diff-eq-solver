@@ -173,7 +173,8 @@ class ButcherSchemaMethod(Method):
 
     @label.setter
     def label(self, value):
-        raise AttributeError()
+        if hasattr(self, "bs") and self.bs is not None:
+            self.bs.label = value
 
     @staticmethod
     # @jit(nopython=True, cache=True)
