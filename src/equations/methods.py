@@ -4,7 +4,6 @@ from dataclasses import dataclass
 from functools import lru_cache
 from typing import List, Tuple, Callable
 
-import numpy
 import numpy as np
 from numba import jit
 from sympy import Derivative, Eq, solve, lambdify, parse_expr, solveset, S, Float, Expr
@@ -29,10 +28,10 @@ class Method(ABC):
         # Fix for my case
         if str(eq) == '-y(x)*tan(x) + 1/cos(x)':
             self._discontinuities = []
-            points = [numpy.pi / 2, 3 * numpy.pi / 2]
+            points = [np.pi / 2, 3 * np.pi / 2]
             for i in range(100):
                 for point in points:
-                    self._discontinuities.append(point + i * 2 * numpy.pi)
+                    self._discontinuities.append(point + i * 2 * np.pi)
         self._eq = eq
 
     def calculate_points(self, x0: float, y0: float, X: float, N: int) -> Tuple[List[float], List[float]]:
@@ -60,19 +59,7 @@ class Method(ABC):
 
             shift = 0
             if i != 0:
-                x_before_disc = xy[i - 1][0][-1]
-                y_before_disc = xy[i - 1][1][-1]
-                # do not work on runge-kutta, because we either way look for a value of func at half step
-                # jump_disc = self._calculate_points(x_before_disc, y_before_disc,
-                #                                    x_before_disc+4*last_h, 2)
-                # y0_old = jump_disc[1][-1]
-
-                # also do not work
-                # # assume y do not change
-                # y0 = y_before_disc
-
                 shift = last_h
-
                 # just compute from exact solution
                 assert Method.solved_f is not None
                 y0 = Method.solved_f(last_point + shift)
@@ -95,7 +82,7 @@ class Method(ABC):
             if i == len(xy) - 1:
                 continue
             ans_xs.append(points_to_consider[i])
-            ans_ys.append(numpy.nan)
+            ans_ys.append(np.nan)
 
         assert len(ans_xs) == len(ans_ys)
         assert len(ans_xs) == len(self.get_xs(x0, X, N))
@@ -122,7 +109,7 @@ class ExactSolutionMethod(Method):
 
     def calc_solved_func(self):
         # Solve ODE
-        x, y, c = self._symbols.x, self._symbols.y, self._symbols.const
+        x, y = self._symbols.x, self._symbols.y
         if self._eq != parse_expr("1/cos(x) - y*tg(x)", local_dict={"x": x, "y": y, "tg": tan_sympy}):
             dydx = Derivative(y, x)
             solved = ode.dsolve(Eq(dydx, self._eq), y)
@@ -186,7 +173,7 @@ class ButcherSchemaMethod(Method):
 
     @label.setter
     def label(self, value):
-        pass
+        raise AttributeError()
 
     @staticmethod
     # @jit(nopython=True, cache=True)

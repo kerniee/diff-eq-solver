@@ -93,7 +93,7 @@ class Controller:
              self.view.n0_field.value(),
              self.view.N_err_field.value(),)
         self.view.clear_plot()
-        for i, method in enumerate(self.methods_to_draw):
+        for method in self.methods_to_draw:
             ys = []
             for curr_n in range(n0, N + 1):
                 x, y = method.calculate_points(x0, y0, X, curr_n)
